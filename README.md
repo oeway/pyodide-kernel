@@ -147,3 +147,7 @@ jlpm serve
 ```
 
 [contrib]: https://github.com/jupyterlite/pyodide-kernel/blob/main/CONTRIBUTING.md
+
+```
+jlpm build:prod && jlpm dist && jlpm docs:lite && sh scripts/fetch-elfinder.sh
+```

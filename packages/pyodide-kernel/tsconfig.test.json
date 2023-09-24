@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfigbase.test",
   "compilerOptions": {
-    "lib": ["ES2019", "WebWorker", "ScriptHost", "DOM", "DOM.Iterable"]
+    "lib": ["es2020", "es2020.bigint", "WebWorker", "ScriptHost", "DOM", "DOM.Iterable"]
   },
   "include": ["src/**/*", "test/**/*"],
   "references": [

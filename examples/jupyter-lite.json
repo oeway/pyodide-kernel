@@ -4,6 +4,11 @@
     "appName": "JupyterLite Pyodide Kernel",
     "disabledExtensions": {
       "@jupyterlite/javascript-kernel-extension": true
+    },
+    "litePluginSettings": {
+      "@jupyterlite/pyodide-kernel-extension:kernel": {
+        "mountElFinder": true
+      }
     }
   }
 }

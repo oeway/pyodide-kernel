@@ -4,7 +4,7 @@
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
 import {
-  IServiceWorkerManager,
+  // IServiceWorkerManager,
   JupyterLiteServer,
   JupyterLiteServerPlugin,
 } from '@jupyterlite/server';
@@ -27,6 +27,39 @@ const PYODIDE_CDN_URL = 'https://cdn.jsdelivr.net/pyodide/v0.24.0/full/pyodide.j
  */
 const PLUGIN_ID = '@jupyterlite/pyodide-kernel-extension:kernel';
 
+function initializeServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    // Register the worker and show the list of quotations.
+    if (!navigator.serviceWorker.controller) {
+      navigator.serviceWorker.oncontrollerchange = function () {
+        if (!this.controller) {
+          return;
+        }
+        this.controller.onstatechange = function () {
+          if (this.state === 'activated') {
+            console.log('Service worker successfully activated.');
+          }
+        };
+      };
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then((registration) => {
+          console.log(
+            'Service worker successfully registered, scope is:',
+            registration.scope,
+          );
+        })
+        .catch((error) => {
+          console.error('Service worker registration failed, error:', error);
+        });
+    } else {
+      console.log('Service worker was activated.');
+    }
+  } else {
+    console.log('Service workers are not supported.');
+  }
+}
+
 /**
  * A plugin to register the Pyodide kernel.
  */
@@ -34,13 +67,14 @@ const kernel: JupyterLiteServerPlugin<void> = {
   id: PLUGIN_ID,
   autoStart: true,
   requires: [IKernelSpecs],
-  optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
+  optional: [IBroadcastChannelWrapper],
   activate: (
     app: JupyterLiteServer,
     kernelspecs: IKernelSpecs,
-    serviceWorker?: IServiceWorkerManager,
+    // serviceWorker?: IServiceWorkerManager,
     broadcastChannel?: IBroadcastChannelWrapper,
   ) => {
+    initializeServiceWorker();
     const config =
       JSON.parse(PageConfig.getOption('litePluginSettings') || '{}')[PLUGIN_ID] || {};
     const url = config.pyodideUrl || PYODIDE_CDN_URL;
@@ -66,7 +100,8 @@ const kernel: JupyterLiteServerPlugin<void> = {
       create: async (options: IKernel.IOptions): Promise<IKernel> => {
         const { PyodideKernel } = await import('@jupyterlite/pyodide-kernel');
 
-        const mountDrive = !!(serviceWorker?.enabled && broadcastChannel?.enabled);
+        const mountDrive = !!broadcastChannel?.enabled;
+        const mountElFinder = !!config.mountElFinder;
 
         if (mountDrive) {
           console.info('Pyodide contents will be synced with Jupyter Contents');
@@ -81,6 +116,7 @@ const kernel: JupyterLiteServerPlugin<void> = {
           pipliteUrls,
           disablePyPIFallback,
           mountDrive,
+          mountElFinder,
         });
       },
     });
