@@ -544,44 +544,24 @@ export class ContentsAPI {
   }
 
   get(path: string): DriveFS.IFile {
-    // Assuming you have a method to get the hash code from the path
-    const hash = this.encode(path);
-    // const dirHash = this.encodeDir(path); // Assuming you can get directory hash
+    path = this.normalizePath(path);
+    // strip off leading slash
+    path = path.replace(/^\//, '');
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', encodeURI(`${this._baseUrl}fs/${path}`), false);
+    xhr.responseType = 'arraybuffer';
     try {
-      const response = this.request({
-        cmd: 'get',
-        // current: dirHash,
-        target: hash,
-        // conv: 1 // auto-detect encoding
-      });
-
-      // Error handling: if content is false, an error occurred
-      if (response.content === false) {
-        throw new Error('Failed to get file content');
-      }
-
-      let data: Uint8Array;
-      let format: 'json' | 'text' | 'base64';
-
-      // If the content is a Data URI Scheme String, it's not a text file
-      if (response.content.startsWith('data:')) {
-        format = 'base64';
-        const base64Data = response.content.split(',')[1];
-        data = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
-      } else {
-        // Otherwise, it's a UTF-8 text file
-        format = 'text';
-        const text = response.content;
-        data = new TextEncoder().encode(text);
-      }
-      return {
-        data,
-        format,
-      };
+      xhr.send();
     } catch (e) {
       console.error(e);
+    }
+    if (xhr.status >= 400) {
       throw new this.FS.ErrnoError(this.ERRNO_CODES['ENOENT']);
     }
+    return {
+      data: new Uint8Array(xhr.response),
+      format: 'binary',
+    };
   }
 
   put(path: string, value: DriveFS.IFile) {
@@ -601,6 +581,7 @@ export class ContentsAPI {
         content = new TextDecoder().decode(value.data);
         encoding = 'utf8';
         break;
+      case 'binary':
       case 'base64':
         content = btoa(String.fromCharCode(...value.data));
         encoding = 'scheme'; // Data URI Scheme
@@ -694,7 +675,7 @@ export class ContentsAPI {
    * Get the api/drive endpoint
    */
   get endpoint(): string {
-    return `${this._baseUrl}/fs/connector`;
+    return `${this._baseUrl}fs/connector`;
   }
 
   private _volumes: string[];
@@ -781,7 +762,7 @@ export namespace DriveFS {
    */
   export interface IFile {
     data: Uint8Array;
-    format: 'json' | 'text' | 'base64';
+    format: 'json' | 'text' | 'base64' | 'binary';
   }
 
   /**
