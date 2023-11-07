@@ -1,6 +1,6 @@
 {
   "name": "@jupyterlite/pyodide-kernel",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0",
   "description": "JupyterLite - Pyodide Kernel",
   "homepage": "https://github.com/jupyterlite/pyodide-kernel",
   "bugs": {
@@ -53,18 +53,18 @@
     "watch": "tsc -b --watch"
   },
   "dependencies": {
-    "@jupyterlab/coreutils": "^6.0.5",
-    "@jupyterlite/contents": "^0.2.0-alpha.0",
-    "@jupyterlite/kernel": "^0.2.0-alpha.0",
+    "@jupyterlab/coreutils": "^6.0.6",
+    "@jupyterlite/contents": "^0.2.0",
+    "@jupyterlite/kernel": "^0.2.0",
     "comlink": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.22.17",
-    "@jupyterlab/testutils": "~4.0.5",
+    "@jupyterlab/testutils": "~4.0.6",
     "@types/jest": "^29.5.4",
     "esbuild": "^0.19.2",
     "jest": "^29.7.0",
-    "pyodide": "0.24.0",
+    "pyodide": "0.24.1",
     "rimraf": "^5.0.1",
     "ts-jest": "^26.3.0",
     "typescript": "~5.2.2"
@@ -74,8 +74,8 @@
   },
   "pyodide-kernel": {
     "packages": {
-      "py/pyodide-kernel": "0.2.0a1",
-      "py/piplite": "0.2.0a1",
+      "py/pyodide-kernel": "0.2.0",
+      "py/piplite": "0.2.0",
       "py/ipykernel": "6.9.2",
       "py/widgetsnbextension3/widgetsnbextension": "3.6.6",
       "py/widgetsnbextension4/widgetsnbextension": "4.0.9"

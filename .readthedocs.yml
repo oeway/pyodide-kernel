@@ -4,13 +4,13 @@ build:
   os: ubuntu-22.04
   tools:
     python: '3.11'
-    nodejs: '18'
+    nodejs: '20'
   apt_packages:
     - libarchive-dev
 
   jobs:
     pre_build:
-      - jlpm --frozen-lockfile
+      - jlpm --immutable
       - jlpm build
       - jlpm dist
       # pre-build the lite site to isolate build errors
