@@ -81,6 +81,7 @@ const kernel: JupyterLiteServerPlugin<void> = {
           pipliteUrls,
           disablePyPIFallback,
           mountDrive,
+          mountElFinder: mountDrive,
         });
       },
     });
