@@ -128,7 +128,7 @@ export class PyodideRemoteKernel {
       this._driveFS = driveFS;
     }
 
-    if (options.mountElFinder) {
+    if (options.mountDrive) {
       const mountpoint = '/elfinder';
       const { FS, PATH, ERRNO_CODES } = this._pyodide;
       const { baseUrl } = options;

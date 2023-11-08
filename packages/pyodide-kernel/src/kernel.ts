@@ -67,7 +67,6 @@ export class PyodideKernel extends BaseKernel implements IKernel {
       disablePyPIFallback,
       location: this.location,
       mountDrive: options.mountDrive,
-      mountElFinder: options.mountElFinder,
     };
   }
 
@@ -324,10 +323,5 @@ export namespace PyodideKernel {
      * Whether or not to mount the Emscripten drive
      */
     mountDrive: boolean;
-
-    /**
-     * Whether or not to mount the elFinder drive
-     */
-    mountElFinder: boolean;
   }
 }
