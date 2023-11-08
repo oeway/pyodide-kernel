@@ -129,21 +129,25 @@ export class PyodideRemoteKernel {
     }
 
     if (options.mountDrive) {
-      const mountpoint = '/elfinder';
-      const { FS, PATH, ERRNO_CODES } = this._pyodide;
-      const { baseUrl } = options;
-      const { DriveFS } = await import('./elfinderfs');
+      try {
+        const mountpoint = '/elfinder';
+        const { FS, PATH, ERRNO_CODES } = this._pyodide;
+        const { baseUrl } = options;
+        const { DriveFS } = await import('./elfinderfs');
 
-      const elfinderFS = new DriveFS({
-        FS,
-        PATH,
-        ERRNO_CODES,
-        baseUrl,
-        driveName: this._driveName,
-        mountpoint,
-      });
-      FS.mkdir(mountpoint);
-      FS.mount(elfinderFS, {}, mountpoint);
+        const elfinderFS = new DriveFS({
+          FS,
+          PATH,
+          ERRNO_CODES,
+          baseUrl,
+          driveName: this._driveName,
+          mountpoint,
+        });
+        FS.mkdir(mountpoint);
+        FS.mount(elfinderFS, {}, mountpoint);
+      } catch (e) {
+        console.error('Failed to mount elFinder FS', e);
+      }
     }
   }
 

@@ -20,7 +20,6 @@ import {
   IStats,
 } from '@jupyterlite/contents/lib/emscripten';
 
-
 // export const DRIVE_SEPARATOR = ':';
 // export const DRIVE_API_PATH = '/api/drive.v1';
 
